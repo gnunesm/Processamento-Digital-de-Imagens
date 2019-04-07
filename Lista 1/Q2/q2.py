@@ -10,19 +10,37 @@ def filtering(mask, img):
 
 def convolution_lowpass(n, img):
     extension = n - 1
-    mask = np.ones((n, n), dtype=np.uint8)
-    extended_img = np.zeros((img.shape[0]+extension, img.shape[1]+extension), dtype=np.uint8)
+    mask = np.ones((n, n), dtype=np.uint32)
+    extended_img = np.zeros((img.shape[0]+extension, img.shape[1]+extension), dtype=np.uint32)
     extended_img[extension//2:-extension//2, extension//2:-extension//2] = img
-    filtered_img = np.zeros(img.shape, dtype=np.uint16)
+    filtered_img = np.zeros(img.shape, dtype=np.uint32)
     for l in range(img.shape[0]):
         for c in range(img.shape[1]):
             filtered_img[l][c] = filtering(mask, extended_img[l:l+n, c:c+n])
-    print(filtered_img)
     filtered_img = filtered_img/(n*n)
-    print(filtered_img)
+    filtered_img = filtered_img.astype(np.uint8)
     return filtered_img
 
-n = 11
+def convolution_laplacian(n, img):
+    extension = n - 1
+    mask = np.array([[0, -1, 0],
+                     [-1, 4, -1],
+                     [0, -1, 0]], np.uint32)
+    extended_img = np.zeros((img.shape[0]+extension, img.shape[1]+extension), dtype=np.uint32)
+    extended_img[extension//2:-extension//2, extension//2:-extension//2] = img
+    filtered_img = np.zeros(img.shape, dtype=np.uint32)
+    for l in range(img.shape[0]):
+        for c in range(img.shape[1]):
+            filtered_img[l][c] = filtering(mask, extended_img[l:l+n, c:c+n])
+    filtered_img = filtered_img/(n*n)
+    filtered_img = img + filtered_img
+    filtered_img = filtered_img.astype(np.uint8)
+    return filtered_img
+
 img = cv2.imread('lena.tif', 0)
-filtered_img = convolution(n, img)
-cv2.imwrite('filtered_{}.png'.format(n), filtered_img)
+img = img.astype(np.uint32)
+for n in range(3, 17, 2):
+    filtered_img = convolution_lowpass(n, img)
+    cv2.imwrite('lowpass_{}.png'.format(n), filtered_img)
+    # filtered_img = convolution_laplacian(n, img)
+    # cv2.imwrite('laplacian_{}.png'.format(n), filtered_img)
