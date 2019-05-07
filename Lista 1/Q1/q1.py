@@ -1,10 +1,20 @@
 import cv2
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 
 sys.setrecursionlimit(10000)
 
 img = cv2.imread('Fig8.02.jpg', 0)
+
+pixel_values = [0]*256
+for l in img:
+    for c in l:
+        pixel_values[c] += 1
+
+plt.bar(np.arange(256), pixel_values)
+plt.show()
+
 thresh = 159
 
 img[img > thresh] = 255
@@ -26,9 +36,6 @@ def neighbor_marking(mark, line, column):
                     marked += 1
                     marked += neighbor_marking(mark, l, c)
     return marked
-
-print(img.shape)
-print(img_marker.shape)
 
 for m in range(img.shape[0]):
     for n in range(img.shape[1]):
