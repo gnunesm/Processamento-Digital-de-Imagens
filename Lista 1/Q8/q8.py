@@ -92,7 +92,7 @@ def adapt_median(img, n=11):
             curr_n = 3
             ok = False
             while curr_n <= n and not ok:
-                ok, filtered_img[l][c] = etapa_A(extended_img[l:l+curr_n, c:c+curr_n])
+                ok, filtered_img[l][c] = etapa_A(extended_img[l+extension//2-curr_n//2:l+extension//2+curr_n//2, c+extension//2-curr_n//2:c+extension//2+curr_n//2])
                 curr_n += 2
     filtered_img = filtered_img.astype(np.uint8)
     return filtered_img
@@ -117,5 +117,26 @@ if not os.path.isfile('mediana1.png'):
 if not os.path.isfile('adapt_mediana1.png'):
     adapt_median_filtered = adapt_median(img)
     cv2.imwrite('adapt_mediana1.png', adapt_median_filtered)
+    print('Filtro de mediana adaptativo')
+    print('PSNR =', psnr(original_img, adapt_median_filtered))
+
+img = cv2.imread('ruidosa2.tif', 0)
+img = img.astype(np.int64)
+print('Filtros sobre ruidosa2')
+if not os.path.isfile('media2.png'):
+    med_filtered = convolution_lowpass(11, img)
+    cv2.imwrite('media2.png', med_filtered)
+    print('Filtro de média')
+    print('PSNR =', psnr(original_img, med_filtered))
+
+if not os.path.isfile('mediana2.png'):
+    median_filtered = median(img)
+    cv2.imwrite('mediana2.png', median_filtered)
+    print('Filtro de mediana')
+    print('PSNR =', psnr(original_img, median_filtered))
+
+if not os.path.isfile('adapt_mediana2.png'):
+    adapt_median_filtered = adapt_median(img)
+    cv2.imwrite('adapt_mediana2.png', adapt_median_filtered)
     print('Filtro de mediana adaptativo')
     print('PSNR =', psnr(original_img, adapt_median_filtered))
