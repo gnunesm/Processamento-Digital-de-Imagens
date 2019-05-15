@@ -27,7 +27,10 @@ magnitude_spectrum = 20*np.log(np.abs(fshift))
 cv2.imwrite('padded_magnitude.png', magnitude_spectrum)
 # cv2.imwrite('padded_magnitude.png', np.abs(fshift))
 
-filtered_mag = butterworth_lowpass(fshift, 1, 20)
+n = 1
+d = 20
+
+filtered_mag = butterworth_lowpass(fshift, n, d)
 magnitude_spectrum = np.copy(filtered_mag)
 magnitude_spectrum[magnitude_spectrum!=0] = 20*np.log(np.abs(filtered_mag[filtered_mag!=0]))
 cv2.imwrite('filtered_magnitude.png', np.abs(magnitude_spectrum))
@@ -35,7 +38,32 @@ filtered_f = np.fft.ifftshift(filtered_mag)
 filtered_img = np.fft.ifft2(filtered_f)
 filtered_img = np.abs(filtered_img)
 filtered_img = filtered_img.astype(np.uint8)
-cv2.imwrite('padded_filtered.png', filtered_img[:img.shape[0], :img.shape[1]])
+cv2.imwrite('filtered_n{}_{}.png'.format(n, d), filtered_img[:img.shape[0], :img.shape[1]])
+
+d = 80
+filtered_mag = butterworth_lowpass(fshift, n, d)
+filtered_f = np.fft.ifftshift(filtered_mag)
+filtered_img = np.fft.ifft2(filtered_f)
+filtered_img = np.abs(filtered_img)
+filtered_img = filtered_img.astype(np.uint8)
+cv2.imwrite('filtered_n{}_{}.png'.format(n, d), filtered_img[:img.shape[0], :img.shape[1]])
+
+n = 20
+d = 20
+filtered_mag = butterworth_lowpass(fshift, n, d)
+filtered_f = np.fft.ifftshift(filtered_mag)
+filtered_img = np.fft.ifft2(filtered_f)
+filtered_img = np.abs(filtered_img)
+filtered_img = filtered_img.astype(np.uint8)
+cv2.imwrite('filtered_n{}_{}.png'.format(n, d), filtered_img[:img.shape[0], :img.shape[1]])
+
+d = 80
+filtered_mag = butterworth_lowpass(fshift, n, d)
+filtered_f = np.fft.ifftshift(filtered_mag)
+filtered_img = np.fft.ifft2(filtered_f)
+filtered_img = np.abs(filtered_img)
+filtered_img = filtered_img.astype(np.uint8)
+cv2.imwrite('filtered_n{}_{}.png'.format(n, d), filtered_img[:img.shape[0], :img.shape[1]])
 
 # f = np.fft.ifftshift(fshift)
 # original_img = np.fft.ifft2(f)
