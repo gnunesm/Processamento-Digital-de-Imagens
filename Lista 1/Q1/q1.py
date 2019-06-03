@@ -47,10 +47,3 @@ for m in range(img.shape[0]):
 
 for idx, numb in enumerate(counts):
     print('Palito {}: {} pixels'.format(idx + 1, numb))
-
-img_new = np.zeros(img.shape)
-
-for n in range(1, 14):
-    img_new[img_marker == n] = 255/13*n
-
-cv2.imwrite('colored_sticks.png', img_new)
