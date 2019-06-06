@@ -35,7 +35,7 @@ def convolution_laplacian(n, img):
             filtered_img[l][c] = filtering(mask, extended_img[l:l+n, c:c+n])
     filtered_img = filtered_img/(n*n)
     adj_laplacian = filtered_img-filtered_img.min()
-    cv2.imwrite('laplacian_puro.png'.format(n), adj_laplacian)
+    cv2.imwrite('laplacian_puro.png', adj_laplacian)
     filtered_img = img + filtered_img
     filtered_img = filtered_img.astype(np.uint8)
     return filtered_img
