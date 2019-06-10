@@ -121,7 +121,11 @@ if not os.path.isfile('adapt_mediana1.png'):
     print('Filtro de mediana adaptativo')
     print('PSNR =', psnr(original_img, adapt_median_filtered))
 
+<<<<<<< HEAD
 print('PSNR com ruidosa1 =', psnr(original_img, img))
+=======
+print('PSNR com ruidosa1 =', psnr(original_img.astype(int), img.astype(int)))
+>>>>>>> d1022ff9bf27e98438ccd97dec05e4f4c6a57794
 
 img = cv2.imread('ruidosa2.tif', 0)
 img = img.astype(np.int64)
@@ -144,4 +148,8 @@ if not os.path.isfile('adapt_mediana2.png'):
     print('Filtro de mediana adaptativo')
     print('PSNR =', psnr(original_img, adapt_median_filtered))
 
+<<<<<<< HEAD
 print('PSNR com ruidosa2 =', psnr(original_img, img))
+=======
+print('PSNR com ruidosa2 =', psnr(original_img.astype(int), img.astype(int)))
+>>>>>>> d1022ff9bf27e98438ccd97dec05e4f4c6a57794

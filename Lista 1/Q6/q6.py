@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 from math import sqrt
 
-# def notch_filter():
-
 def distance(u, v, p, q):
     return sqrt((u - p/2)**2 + (v - q/2)**2)
 
@@ -25,17 +23,7 @@ fshift = np.fft.fftshift(f)
 magnitude_spectrum = 20*np.log(np.abs(fshift))
 cv2.imwrite('magnitude.png', magnitude_spectrum)
 
-# fshift[fshift.shape[0]//2 - 3:fshift.shape[0]//2 + 3, :] = 0
-
-# fshift[fshift.shape[0]//2 - 3:fshift.shape[0]//2 + 3, :fshift.shape[1]//2 - 5] = 0
-# fshift[fshift.shape[0]//2 - 3:fshift.shape[0]//2 + 3, fshift.shape[1]//2 + 5:] = 0
-
-# fshift[225:525, :230] = 0
-# fshift[225:525, 770:] = 0
-
 filtered_mag = butterworth_lowpass(fshift, 10, 150)
-
-# filtered_mag = fshift
 
 magnitude_spectrum = np.abs(np.copy(filtered_mag))
 magnitude_spectrum[magnitude_spectrum!=0] = 20*np.log(magnitude_spectrum[magnitude_spectrum!=0])
