@@ -30,6 +30,7 @@ def mse(original_img, filtered_img):
     for l in range(m):
         for c in range(n):
             total += (original_img[l][c] - filtered_img[l][c])**2
+    print(total/(m*n))
     return  total/(m*n)
 
 def psnr(original_img, filtered_img):
@@ -120,6 +121,8 @@ if not os.path.isfile('adapt_mediana1.png'):
     print('Filtro de mediana adaptativo')
     print('PSNR =', psnr(original_img, adapt_median_filtered))
 
+print('PSNR com ruidosa1 =', psnr(original_img, img))
+
 img = cv2.imread('ruidosa2.tif', 0)
 img = img.astype(np.int64)
 print('Filtros sobre ruidosa2')
@@ -140,3 +143,5 @@ if not os.path.isfile('adapt_mediana2.png'):
     cv2.imwrite('adapt_mediana2.png', adapt_median_filtered)
     print('Filtro de mediana adaptativo')
     print('PSNR =', psnr(original_img, adapt_median_filtered))
+
+print('PSNR com ruidosa2 =', psnr(original_img, img))
