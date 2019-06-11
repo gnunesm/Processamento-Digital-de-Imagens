@@ -37,7 +37,7 @@ def phi6(img):
     return (eta(img,2,0)-eta(img,0,2))*((eta(img,3,0)+eta(img,1,2))**2-(eta(img,2,1)+eta(img,0,3))**2)+4*eta(img,1,1)*(eta(img,3,0)+eta(img,1,2))*(eta(img,2,1)+eta(img,0,3))
 
 def phi7(img):
-    return
+    return (3*eta(img,2,1)-eta(img,0,3))*(eta(img,3,0)+eta(img,1,2))*((eta(img,3,0)+eta(img,1,2))**2-3*((eta(img,2,1)+eta(img,0,3))**2))+(3*eta(img,1,2)-eta(img,3,0))*(eta(img,2,1)+eta(img,0,3))*(3*((eta(img,3,0)+eta(img,1,2))**2)-(eta(img,2,1)+eta(img,0,3))**2)
 
 img = cv2.imread('lena.tif', 0)
 img = img.astype(np.float64)
@@ -45,19 +45,15 @@ img = img.astype(np.float64)
 x = np.array([np.arange(img.shape[0]), ]*img.shape[1]).transpose()
 y = np.array([np.arange(img.shape[1]), ]*img.shape[0])
 
-phi = [[], [], [], [], []]
+phi = [[], [], [], [], [], [], []]
 
 phi[0].append(phi1(img))
 phi[1].append(phi2(img))
 phi[2].append(phi3(img))
 phi[3].append(phi4(img))
 phi[4].append(phi5(img))
-
-# print('phi1 =', np.sign(phi1)*np.log10(np.absolute(phi1)))
-# print('phi2 =', np.sign(phi2)*np.log10(np.absolute(phi2)))
-# print('phi3 =', np.sign(phi3)*np.log10(np.absolute(phi3)))
-# print('phi4 =', np.sign(phi4)*np.log10(np.absolute(phi4)))
-# print('phi5 =', np.sign(phi5)*np.log10(np.absolute(phi5)))
+phi[5].append(phi6(img))
+phi[6].append(phi7(img))
 
 new_img = np.zeros(img.shape, dtype = np.float64)
 new_img[img.shape[0]//4:3*img.shape[0]//4, img.shape[1]//4:3*img.shape[1]//4] = cv2.resize(img, (img.shape[0]//2, img.shape[1]//2))
@@ -68,6 +64,8 @@ phi[1].append(phi2(new_img))
 phi[2].append(phi3(new_img))
 phi[3].append(phi4(new_img))
 phi[4].append(phi5(new_img))
+phi[5].append(phi6(new_img))
+phi[6].append(phi7(new_img))
 
 new_img = imutils.rotate_bound(img, 90)
 cv2.imwrite('rot90.png', new_img)
@@ -77,6 +75,8 @@ phi[1].append(phi2(new_img))
 phi[2].append(phi3(new_img))
 phi[3].append(phi4(new_img))
 phi[4].append(phi5(new_img))
+phi[5].append(phi6(new_img))
+phi[6].append(phi7(new_img))
 
 new_img = imutils.rotate_bound(img, 180)
 cv2.imwrite('rot180.png', new_img)
@@ -86,8 +86,9 @@ phi[1].append(phi2(new_img))
 phi[2].append(phi3(new_img))
 phi[3].append(phi4(new_img))
 phi[4].append(phi5(new_img))
+phi[5].append(phi6(new_img))
+phi[6].append(phi7(new_img))
 
 phi = np.sign(phi)*np.absolute(np.log10(np.absolute(phi)))
 headers = ['Original', 'Resized', 'Rotated 90', 'Rotated 180']
-print(len(phi), len(phi[0]))
 print(tabulate(phi, headers=headers))
