@@ -62,8 +62,8 @@ for p in ordered:
 for n in range(len(closed_list)-1):
     plt.plot((closed_list[n][0], closed_list[n+1][0]), (closed_list[n][1], closed_list[n+1][1]), 'r-')
 
-ordered = np.append(ordered, ordered[0], axis=0)
-ordered = np.delete(ordered, 0)
+ordered = np.append(ordered, [ordered[0]], axis=0)
+ordered = np.delete(ordered, 0, axis=0)
 
 start_point = max(ordered, key=lambda t: t[0])
 end_point = min(ordered, key=lambda t: t[0])
