@@ -24,6 +24,13 @@ def neighbor_marking(mark, line, column):
                     img_marker[l][c] = mark
                     neighbor_marking(mark, l, c)
 
+def region_grow(l, c):
+    for m in range(l-1, l+2):
+        for n in range(c-1, c+2):
+            if eroded[m][n] != 255 and diff_img[m][n] <= t:
+                eroded[m][n] = 255
+                region_grow(m, n)
+
 img = cv2.imread('Fig10.40(a).jpg', 0)
 
 # pixel_values = [0]*256
@@ -33,7 +40,7 @@ img = cv2.imread('Fig10.40(a).jpg', 0)
 
 # plt.bar(np.arange(256), pixel_values)
 # plt.show()
-
+original_img = np.copy(img)
 thresh = 254
 
 img[img > thresh] = 255
@@ -55,4 +62,19 @@ cv2.imwrite('marked.png', 15*img_marker)
 eroded = img_marker
 for _ in range(10):
     eroded = mod_erosion(eroded, 3)
+eroded[eroded!=0] = 255*np.ones(eroded[eroded!=0].shape)
 cv2.imwrite('eroded.png', eroded)
+
+t = 68
+
+diff_img = 255 - original_img
+cv2.imwrite('diff_img.png', diff_img)
+
+for l in range(eroded.shape[0]):
+    for c in range(eroded.shape[1]):
+        if eroded[l][c] == 255:
+            region_grow(l, c)
+
+cv2.imwrite('final.png', eroded)
+
+cv2.imwrite('diff.png', eroded - img)
