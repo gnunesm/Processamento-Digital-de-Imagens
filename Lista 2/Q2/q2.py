@@ -1,8 +1,9 @@
 import cv2
+import math
 import numpy as np
 
 # delta = np.pi/6
-delta = (22, 10)
+delta = (math.radians(22), math.radians(2)) #22, 10
 
 img = cv2.imread('peppers.tiff')
 img = img.astype(np.float64)
@@ -35,11 +36,23 @@ hsi_img[:,:,0][hsi_img[:,:,0]<=delta[0]] += 4*np.pi/3
 hsi_img[:,:,0][hsi_img[:,:,0]>=2*np.pi-delta[1]] -= 2*np.pi/3
 
 # HSI to RGB
-# img[:,:,0] = hsi_img[:,:,2]*(1 - hsi_img[:,:,1])
-
-# img[]
-
-
+for l in range(img.shape[0]):
+    for c in range(img.shape[1]):
+        h = hsi_img[l][c][0]
+        s = hsi_img[l][c][1]
+        i = hsi_img[l][c][2] 
+        if h < 2*np.pi/3:
+            img[l][c][0] = i*(1 - s)
+            img[l][c][2] = i*(1 + s*np.cos(h)/np.cos(np.pi/3-h))
+            img[l][c][1] = 3*i - (img[l][c][2] + img[l][c][0])
+        elif h >= 240:
+            img[l][c][1] = i*(1 - s)
+            img[l][c][0] = i*(1 + s*np.cos(h)/np.cos(np.pi/3-h))
+            img[l][c][2] = 3*i - (img[l][c][1] + img[l][c][0])
+        else:
+            img[l][c][2] = i*(1 - s)
+            img[l][c][1] = i*(1 + s*np.cos(h)/np.cos(np.pi/3-h))
+            img[l][c][0] = 3*i - (img[l][c][2] + img[l][c][1])
 
 ###################################################
 # hsi_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -48,6 +61,6 @@ hsi_img[:,:,0][hsi_img[:,:,0]>=2*np.pi-delta[1]] -= 2*np.pi/3
 # hsi_img[:,:,0][hsi_img[:,:,0]>=180-delta[1]] -= 60
 # img = cv2.cvtColor(hsi_img, cv2.COLOR_HSV2BGR)
 
-# cv2.imwrite('changed.png', img)
+cv2.imwrite('changed.png', img)
 
 
