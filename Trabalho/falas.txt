@@ -1,0 +1,16 @@
+-Algoritmo
+Agora vou explicar o algoritmo base para gerar esses histogramas. Digo algoritmo base porque várias modificaçẽs são possíveis, apesar de que a versão mais simples costuma ter os melhores resultados em algumas aplicações.
+
+-Cálculo de gradiente
+Inicialmente são calculados separadamente os gradientes vertical e horizontal de cada pixel da imagem. Isso é feito com a aplicação dessas máscaras sobre cada pixel individualmente, ou seja, o gradiente é a subtração do valor do pixel seguinte pelo valor do pixel anterior.
+
+A partir daí, por trigonometria, podemos converter esses valores da forma retangular para a forma polar (magnitude e ângulo), porque a informação que mais interessa para criar os histogramas é a direção para a qual o  gradiente aponta.
+
+-Criação dos histogramas
+O próximo passo é dividir a imagem em regiões chamadas células. Não necessariamente precisam ser quadradas mas em muitos casos células de 6x6 ou 8x8 pixels costumam dar bons resultados. Cada célula dará origem a um histograma. A última variável a se determinar é o número de colunas do histograma, ou seja, em quantos intervalos vamos dividir os ângulos dos gradientes.
+
+Nesse momento então, as informações abstraídas de cada célula se resumem a uma matriz de magnitude e uma de ângulos.
+
+O histograma não é simplesmente a contagem de quantos pixels possuem cada ângulo. As magnitudes servem como pesos, de forma que o valor de cada coluna é a magnitude acumulada de todos os pixels com ângulo de gradiente naquele intervalo. Na maioria das vezes utiliza-se o que se chama gradiente sem sinal, de forma que os ângulos são tomados só de 0 a 180 graus. (mostrar equivalência)
+
+Pra ter uma distribuição um pouco mais próxima do que seria uma curva contínua, valores entre uma coluna e outra são divididos proporcionalmente entre elas. Dessa forma vemos o que significa a diminuição mencionada na quantidade de dados. Uma célula composta por 8x8x3 valores passa a ser representada por um vetor de 9.
