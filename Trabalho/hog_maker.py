@@ -67,7 +67,7 @@ for m in range(v_cells):
                 else:
                     hist[bin_] += final_mag[l][c]*(1-frac)
                     hist[0] += final_mag[l][c]*(frac)
-        cells[-1].  append(hist)
+        cells[-1].append(hist)
 
 cells = np.array(cells)
 
