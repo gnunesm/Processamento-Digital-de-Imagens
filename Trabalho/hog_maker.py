@@ -1,16 +1,13 @@
 import cv2
 import math
 import numpy as np
-
+import random
 import matplotlib.pyplot as plt
 
-# from skimage.feature import hog
-# from skimage import data, exposure
-
-# def calc_l2(vectors):
-
 img = np.flip(cv2.imread('crop001053.png'), axis=2)
-# img = img.astype(np.float64)
+print(img)
+img = img.astype(np.float64)
+print(img)
 
 h_grad = np.copy(img)
 v_grad = np.copy(img)
@@ -35,9 +32,8 @@ grad_dir = np.arctan(v_grad/h_grad)
 grad_dir[np.isnan(grad_dir)] = np.pi/2
 grad_dir = np.degrees(grad_dir)
 grad_dir[grad_dir<0] += 180
-grad_dir = np.absolute(grad_dir)
 
-print(grad_mag.shape)
+grad_dir = np.absolute(grad_dir)
 
 final_mag = np.zeros((img.shape[0], img.shape[1]), dtype=np.float64)
 final_dir = np.zeros((img.shape[0], img.shape[1]), dtype=np.float64)
@@ -69,20 +65,16 @@ for m in range(v_cells):
                 else:
                     hist[bin_] += final_mag[l][c]*(1-frac)
                     hist[0] += final_mag[l][c]*(frac)
-        cells[-1].append(hist)
+        cells[-1].  append(hist)
 
 cells = np.array(cells)
-print(cells.shape)
-print(cells[0][0])
 
-# descriptor = []
-
-# for l in range(cells.shape[0]-1):
-#     for c in range(cells.shape[1]-1)
-
+objects = ['0', '20', '40', '60', '80', '100', '120', '140', '160']
+y_pos = np.arange(len(objects))
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4), sharex=False, sharey=False)
 
-# img = img.astype(np.int8)
+img = img.astype(np.uint8)
+print(img)
 original_img = np.copy(img)
 
 cell_l = 100
@@ -95,24 +87,26 @@ ax1.axis('off')
 ax1.imshow(img)
 ax1.set_title('Input image')
 
-ax2.axis('off')
+ax2.axis('on')
 ax2.bar(np.arange(9), cells[cell_l][cell_c])
 ax2.set_title('Histogram of Oriented Gradients')
+ax2.set_xticklabels(objects)
 plt.show()
 
-# for n in range(10):
-#     img = np.copy(original_img)
-#     cell_l = 50 - n
-#     cell_c = 48 - n
+for n in range(10):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4), sharex=False, sharey=False)
+    img = np.copy(original_img)
+    cell_l = random.randint(0,120)
+    cell_c = random.randint(0, 60)
 
-#     img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 0] = 255*np.ones((8,8))
-#     img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 1:] = np.zeros((8,8,2))
+    img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 0] = 255*np.ones((8,8))
+    img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 1:] = np.zeros((8,8,2))
 
-#     ax1.axis('off')
-#     ax1.imshow(img)
-#     ax1.set_title('Input image')
+    ax1.axis('off')
+    ax1.imshow(img)
+    ax1.set_title('Input image')
 
-#     ax2.axis('off')
-#     ax2.bar(np.arange(9), cells[cell_l][cell_c])
-#     ax2.set_title('Histogram of Oriented Gradients')
-#     plt.show()
+    ax2.axis('off')
+    ax2.bar(np.arange(9), cells[cell_l][cell_c])
+    ax2.set_title('Histogram of Oriented Gradients')
+    plt.show()
