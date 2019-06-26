@@ -1,14 +1,15 @@
 import cv2
+import math
 import numpy as np
 
 import matplotlib.pyplot as plt
 
-from skimage.feature import hog
-from skimage import data, exposure
+# from skimage.feature import hog
+# from skimage import data, exposure
 
 # def calc_l2(vectors):
 
-img = cv2.imread('crop001053.png')
+img = np.flip(cv2.imread('crop001053.png'), axis=2)
 # img = img.astype(np.float64)
 
 h_grad = np.copy(img)
@@ -60,10 +61,14 @@ for m in range(v_cells):
         for l in range(cell_size*m, cell_size*(m+1)):
             for c in range(cell_size*n, cell_size*(n+1)):
                 angle = final_dir[l][c]
-                if angle == 180:
-                    hist[8] += final_mag[l][c]
+                frac, bin_ = math.modf(angle/20)
+                bin_ = int(bin_)
+                if bin_ != 8:
+                    hist[bin_] += final_mag[l][c]*(1-frac)
+                    hist[bin_+1] += final_mag[l][c]*(frac)
                 else:
-                    hist[int(angle//20)] += final_mag[l][c]
+                    hist[bin_] += final_mag[l][c]*(1-frac)
+                    hist[0] += final_mag[l][c]*(frac)
         cells[-1].append(hist)
 
 cells = np.array(cells)
@@ -78,13 +83,36 @@ print(cells[0][0])
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4), sharex=False, sharey=False)
 
 # img = img.astype(np.int8)
+original_img = np.copy(img)
+
+cell_l = 100
+cell_c = 48
+
+img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 0] = 255*np.ones((8,8))
+img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 1:] = np.zeros((8,8,2))
 
 ax1.axis('off')
 ax1.imshow(img)
 ax1.set_title('Input image')
 
 ax2.axis('off')
-ax2.bar(np.arange(9), cells[0][0])
+ax2.bar(np.arange(9), cells[cell_l][cell_c])
 ax2.set_title('Histogram of Oriented Gradients')
 plt.show()
-# plt.bar(np.arange(256), pixel_values)
+
+# for n in range(10):
+#     img = np.copy(original_img)
+#     cell_l = 50 - n
+#     cell_c = 48 - n
+
+#     img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 0] = 255*np.ones((8,8))
+#     img[cell_size*cell_l:cell_size*(cell_l+1), cell_size*cell_c:cell_size*(cell_c+1), 1:] = np.zeros((8,8,2))
+
+#     ax1.axis('off')
+#     ax1.imshow(img)
+#     ax1.set_title('Input image')
+
+#     ax2.axis('off')
+#     ax2.bar(np.arange(9), cells[cell_l][cell_c])
+#     ax2.set_title('Histogram of Oriented Gradients')
+#     plt.show()
