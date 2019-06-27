@@ -2,18 +2,15 @@ import cv2
 import math
 import numpy as np
 
-# delta = np.pi/6
-delta = (math.radians(22), math.radians(2)) #22, 10
+delta = (math.radians(50), math.radians(5))
 
 img = cv2.imread('peppers.tiff')
+cv2.imwrite('peppers.png', img)
 img = img.astype(np.float64)
 
 # RGB to HSI
 hsi_img = np.zeros(img.shape, np.float64)
 theta = np.zeros(img.shape[:2], np.float64)
-# mask = img.sum(axis=2)!=0
-# print(theta.shape, theta[mask].shape)
-# theta[] = np.arccos(0.5*(img[mask][:,:,2]-img[mask][:,:,1]+img[mask][:,:,2]-img[mask][:,:,0])/np.sqrt((img[mask][:,:,2]-img[mask][:,:,1])**2+(img[mask][:,:,2]-img[mask][:,:,0])*(img[mask][:,:,1]-img[mask][:,:,0])))
 
 for l in range(theta.shape[0]):
     for c in range(theta.shape[1]):
@@ -53,13 +50,6 @@ for l in range(img.shape[0]):
             img[l][c][2] = i*(1 - s)
             img[l][c][1] = i*(1 + s*np.cos(h)/np.cos(np.pi/3-h))
             img[l][c][0] = 3*i - (img[l][c][2] + img[l][c][1])
-
-###################################################
-# hsi_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-# print(hsi_img.shape)
-# hsi_img[:,:,0][hsi_img[:,:,0]<=delta[0]] += 120
-# hsi_img[:,:,0][hsi_img[:,:,0]>=180-delta[1]] -= 60
-# img = cv2.cvtColor(hsi_img, cv2.COLOR_HSV2BGR)
 
 cv2.imwrite('changed.png', img)
 
